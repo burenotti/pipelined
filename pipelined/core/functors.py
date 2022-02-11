@@ -28,25 +28,25 @@ class BaseFunctor(Generic[T, S]):
         return self.functor(other)
 
 
-class IterableFunctor(BaseFunctor[Iterable[T_co], Iterable[S]]):
+class IterableFunctor(Generic[T, S]):
 
-    def __init__(self, functor: Callable[[Iterable[T_co]], Iterable[S]]):
-        super().__init__(functor)
+    def __init__(self, functor: Callable[[T], S]):
+        self.functor = functor
 
-    def __ror__(self, other: Iterable[T_co]) -> Iterable[S]:
+    def __ror__(self, other: T) -> S:
         return self.functor(other)
 
 
-class BoolPredicate(Generic[T_co]):
+class BoolPredicate(Generic[T]):
 
-    def __init__(self, function: Callable[[T_co], bool]):
+    def __init__(self, function: Callable[[T], bool]):
         self.function = function
 
-    def __and__(self, other: BoolPredicate[T_co]) -> BoolPredicate[T_co]:
+    def __and__(self, other: BoolPredicate[T]) -> BoolPredicate[T]:
         return BoolPredicate[T](lambda arg: self(arg) and other(arg))
 
-    def __or__(self, other: BoolPredicate[T_co]):
+    def __or__(self, other: BoolPredicate[T]):
         return BoolPredicate[T](lambda arg: self(arg) or other(arg))
 
-    def __call__(self, arg: T_co) -> bool:
+    def __call__(self, arg: T) -> bool:
         return self.function(arg)

@@ -1,4 +1,6 @@
-from pipelined import utils
+from pipelined import utils, core
 from .aggregate import *
 from .generators import *
 from .transform import *
+from .core import ProxyObject
+
